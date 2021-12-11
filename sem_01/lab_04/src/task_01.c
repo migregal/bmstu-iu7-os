@@ -19,7 +19,7 @@ int main()
   {
     pid_t pid = fork();
 
-    if (-1 == pid)
+    if (pid == -1)
     {
       fprintf(stderr, "Can't fork\n");
       exit(ERR_FORK);

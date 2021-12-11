@@ -21,9 +21,11 @@ int main()
   int fd[2];
   char buffer[BUFF_SZ] = {0};
   pid_t child_pids[CHILD_CNT] = {0};
-  char *messages[MSG_CNT] = {"First\n", "Second\n"};
+  char *messages[MSG_CNT] = {
+      "Maybe I maybe you\n",
+      "The autumn leaves of red and gold\n"};
 
-  if (-1 == pipe(fd))
+  if (pipe(fd) == -1)
   {
     fprintf(stderr, "Can't pipe\n");
     exit(ERR_PIPE);
@@ -36,13 +38,13 @@ int main()
   {
     pid_t pid = fork();
 
-    if (-1 == pid)
+    if (pid == -1)
     {
       fprintf(stderr, "Can't fork\n");
       exit(ERR_FORK);
     }
 
-    if (0 != pid)
+    if (pid)
     {
       child_pids[i] = pid;
     }
@@ -51,11 +53,10 @@ int main()
       printf("child_%u born:PID = %d; PPID = %d; GROUP = %d\n",
              i, getpid(), getppid(), getpgrp());
 
-      int msg_i = i % MSG_CNT;
       close(fd[0]);
-      write(fd[1], messages[msg_i], strlen(messages[msg_i]));
+      write(fd[1], messages[i], strlen(messages[i]));
       printf("child_%u send:PID = %d; MSG = %s\n",
-             i, getpid(), messages[msg_i]);
+             i, getpid(), messages[i]);
 
       exit(ERR_OK);
     }
@@ -94,12 +95,12 @@ int main()
   close(fd[1]);
   ssize_t readed = read(fd[0], buffer, BUFF_SZ);
 
-  if (-1 == readed)
+  if (readed == -1)
   {
     printf("error on read\n");
   }
 
-  printf("parent recv:\n%s\n", buffer);
+  printf("parent recv:\n\n%s\n", buffer);
   printf("parent died:PID = %d; PPID = %d; GROUP = %d\n",
          getpid(), getppid(), getpgrp());
 }

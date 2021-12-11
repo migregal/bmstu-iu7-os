@@ -13,14 +13,14 @@ int main()
 {
   pid_t child_pids[CHILD_CNT] = {0};
 
-  printf("parent born:PID = %d; PPID = %d; GROUP = %d\n",
+  printf("parent  born:PID = %d; PPID = %d; PGRP = %d\n",
          getpid(), getppid(), getpgrp());
 
   for (unsigned i = 0; i < CHILD_CNT; ++i)
   {
     pid_t pid = fork();
 
-    if (-1 == pid)
+    if (pid == -1)
     {
       fprintf(stderr, "Can't fork\n");
       exit(ERR_FORK);
@@ -32,12 +32,12 @@ int main()
     else
     {
       // child
-      printf("child%u born:PID = %d; PPID = %d; GROUP = %d\n",
+      printf("child_%u born:PID = %d; PPID = %d; PGRP = %d\n",
              i, getpid(), getppid(), getpgrp());
 
       sleep(CHILD_SLP);
 
-      printf("child%u died:PID = %d; PPID = %d; GROUP = %d\n",
+      printf("child_%u died:PID = %d; PPID = %d; PGRP = %d\n",
              i, getpid(), getppid(), getpgrp());
 
       exit(ERR_OK);
@@ -48,28 +48,28 @@ int main()
   {
     int status, stat_val = 0;
 
-    printf("parent waiting\n");
+    printf("parent  waiting\n");
     pid_t childpid = wait(&status);
-    printf("parent waited:child process (PID = %d) finished. status: %d\n",
+    printf("parent  waited:child process (PID = %d) finished. status: %d\n",
            childpid, status);
 
     if (WIFEXITED(stat_val))
     {
-      printf("parent talk:child process #%d finished with code: %d\n", i + 1,
+      printf("parent  talk:child process #%d finished with code: %d\n", i + 1,
              WEXITSTATUS(stat_val));
     }
     else if (WIFSIGNALED(stat_val))
     {
-      printf("parent talk:child process #%d finished by signal with code: %d\n",
+      printf("parent  talk:child process #%d finished by signal with code: %d\n",
              i + 1, WTERMSIG(stat_val));
     }
     else if (WIFSTOPPED(stat_val))
     {
-      printf("parent talk:child process #%d stopped with code: %d\n",
+      printf("parent  talk:child process #%d stopped with code: %d\n",
              i + 1, WSTOPSIG(stat_val));
     }
   }
 
-  printf("parent died:PID = %d; PPID = %d; GROUP = %d\n",
+  printf("parent  died:PID = %d; PPID = %d; PGRP = %d\n",
          getpid(), getppid(), getpgrp());
 }

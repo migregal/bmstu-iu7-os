@@ -17,8 +17,8 @@
 int main()
 {
   pid_t child_pids[CHILD_CNT] = {0};
-  char *cmds[CMD_CNT] = {"curl", "cal"};
-  char *args[CMD_CNT] = {"wttr.in?format=3", NULL};
+  char *cmds[CMD_CNT] = {"./lab_05", "./lab_06"};
+  char *args[CMD_CNT] = {"./", NULL};
 
   printf("parent born:PID = %d; PPID = %d; GROUP = %d\n",
          getpid(), getppid(), getpgrp());
@@ -27,7 +27,7 @@ int main()
   {
     pid_t pid = fork();
 
-    if (-1 == pid)
+    if (pid == -1)
     {
       fprintf(stderr, "Can't fork\n");
       exit(ERR_FORK);
@@ -47,7 +47,7 @@ int main()
       int rc = execlp(cmds[cmd_i], cmds[cmd_i],
                       args[cmd_i], (char *)NULL);
 
-      if (-1 == rc)
+      if (rc == -1)
       {
         fprintf(stderr, "exec failed\n");
         exit(ERR_EXEC);
