@@ -1,62 +1,76 @@
 #include "stack.h"
 
+typedef struct node {
+    entry_t entry;
+    struct node *next;
+} node_t;
+
+typedef struct dirstack
+{
+    node_t *head;
+} dirstack_t;
+
+
+dirstack_t *init()
+{
+    dirstack_t *stack = malloc(sizeof(dirstack_t));
+    stack->head = NULL;
+
+    return stack;
+}
+
 void push(dirstack_t *const stack, entry_t elem)
 {
-    if (stack->size >= stack->capacity)
-    {
-        entry_t *temp = realloc(stack->arr, sizeof(entry_t) * stack->size * 2);
-        if (!temp)
-            exit(ALLOCATION_ERROR);
+    node_t *node = malloc(sizeof(node_t));
+    if (!node) {
+        free_stack((dirstack_t **)&stack);
 
-        stack->arr = temp;
-        stack->capacity = stack->size * 2;
+        fprintf(stderr, "Error while allocation.");
+        exit(ALLOCATION_ERROR);
     }
 
-    stack->arr[stack->size++] = elem;
+    node->entry = elem;
+
+    node->next = stack->head;
+    stack->head = node;
 }
 
 entry_t pop(dirstack_t *const stack)
 {
-    if (2 * stack->size < stack->capacity)
+    if (stack->head)
     {
-        entry_t *temp = realloc(stack->arr, sizeof(entry_t) * stack->capacity / 2);
-        if (!temp)
-            exit(ALLOCATION_ERROR);
+        node_t* temp = stack->head;
+        stack->head = stack->head->next;
 
-        stack->arr = temp;
-        stack->capacity = stack->capacity / 2;
+        entry_t res = temp->entry;
+        free(temp);
+        return res;
     }
-
-    if (stack->size > 0)
-        return stack->arr[--(*stack).size];
 
     fprintf(stderr, "Stack is empty.");
     exit(STACK_ERROR);
 }
 
-void free_stack(const dirstack_t *const stack)
+uint8_t is_empty(const dirstack_t *const stack)
 {
-    if (!stack)
-        exit(STACK_ERROR);
-
-    free(stack->arr);
+    return !(stack->head);
 }
 
-dirstack_t init()
+void free_entry(entry_t *entry) {
+    if (!entry)
+        return;
+
+    free(entry->symbolic_name);
+    free(entry->path);
+}
+
+void free_stack(dirstack_t ** stack)
 {
-    dirstack_t stack =
-        {
-            .arr = NULL,
-            .size = 0,
-            .capacity = 10,
-        };
+    if (!stack ||!(*stack))
+        exit(STACK_ERROR);
 
-    stack.arr = malloc(sizeof(entry_t) * 10);
-    if (!stack.arr)
-    {
-        fprintf(stderr, "Error while allocation.");
-        exit(ALLOCATION_ERROR);
+    while (!is_empty(*stack)) {
+        pop((dirstack_t *const)(*stack));
     }
-
-    return stack;
+    free(*stack);
 }

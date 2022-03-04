@@ -17,18 +17,18 @@ typedef struct entry
     size_t          level;
 } entry_t;
 
-typedef struct dirstack
-{
-    entry_t *arr;
-    size_t capacity;
-    size_t size;
-} dirstack_t;
+struct dirstack;
 
-dirstack_t init();
+typedef struct dirstack dirstack_t;
+
+dirstack_t *init();
 
 void push(dirstack_t *const stack, entry_t elem);
 
 entry_t pop(dirstack_t *const stack);
 
+uint8_t is_empty(const dirstack_t *const stack);
 
-void free_stack(const dirstack_t *const stack);
+void free_entry(entry_t *entry);
+
+void free_stack(dirstack_t **stack);
