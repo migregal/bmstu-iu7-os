@@ -4,6 +4,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "stack.h"
+#include "tree_struct.h"
 
-void log_entry(entry_t entry);
+void log_entry(tree_entry_t *entry);
