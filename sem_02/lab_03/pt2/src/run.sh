@@ -10,7 +10,7 @@ echo ">>>>> Modules 1 and 2 was loaded. Let's look at them: "
 lsmod | grep md
 sleep 1
 echo ">>>>> This is the last 15 lines in the system log: "
-dmesg | tail -15
+dmesg | tail -15 | grep +
 read -n 1 -s -r -p "Press any key to continue..."
 echo ">>>>> Remove md2..."
 rmmod md2
@@ -19,7 +19,7 @@ echo ">>>>> Loading md3.ko..."
 insmod md3.ko
 sleep 0.8
 echo ">>>>> This is the last 15 lines in the system log: "
-dmesg | tail -15
+dmesg | tail -15 | grep +
 read -n 1 -s -r -p "Press any key to continue..."
 echo ">>>>> Remove md3..."rmmod md3
 rmmod md3

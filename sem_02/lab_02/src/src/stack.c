@@ -15,6 +15,12 @@ typedef struct dirstack
 dirstack_t *init(void (*el_free)(void **))
 {
     dirstack_t *stack = malloc(sizeof(dirstack_t));
+    if (!stack)
+    {
+        fprintf(stderr, "Error while allocation.");
+        exit(ALLOCATION_ERROR);
+    }
+
     stack->head = NULL;
     stack->el_free = el_free;
 
@@ -42,18 +48,18 @@ void push(dirstack_t *const stack, void *elem)
 
 void *pop(dirstack_t *const stack)
 {
-    if (stack->head)
+    if (!stack->head)
     {
-        node_t* temp = stack->head;
-        stack->head = stack->head->next;
-
-        void * res = temp->entry;
-        free(temp);
-        return res;
+        fprintf(stderr, "Stack is empty.");
+        exit(STACK_ERROR);
     }
 
-    fprintf(stderr, "Stack is empty.");
-    exit(STACK_ERROR);
+    node_t *temp = stack->head;
+    stack->head = stack->head->next;
+
+    void *res = temp->entry;
+    free(temp);
+    return res;
 }
 
 uint8_t is_empty(const dirstack_t *const stack)
