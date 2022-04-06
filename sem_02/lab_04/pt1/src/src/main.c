@@ -32,7 +32,7 @@ void print_cwd(const char *proc_path, FILE *out)
     snprintf(pathToOpen, PATH_MAX, "%s/cwd", proc_path);
     fprintf(out, "\n%s:\n", pathToOpen);
     char buf[BUF_SIZE] = {'\0'};
-    /*int _read_len =*/readlink(pathToOpen, buf, BUF_SIZE);
+    readlink(pathToOpen, buf, BUF_SIZE);
     fprintf(out, "%s\n", buf);
 }
 
@@ -78,7 +78,7 @@ void print_exe(const char *proc_path, FILE *out)
     fprintf(out, "\n%s:\n", pathToOpen);
 
     char buf[BUF_SIZE] = {'\0'};
-    /*int _read_len =*/readlink(pathToOpen, buf, BUF_SIZE);
+    readlink(pathToOpen, buf, BUF_SIZE);
     fprintf(out, "%s\n", buf);
 }
 
@@ -97,7 +97,7 @@ void print_fd(const char *proc_path, FILE *out)
         if ((strcmp(readDir->d_name, ".") != 0) && (strcmp(readDir->d_name, "..") != 0))
         {
             sprintf(path, "%s%s", pathToOpen, readDir->d_name);
-            /*int _read_len =*/readlink(path, string, PATH_MAX);
+            readlink(path, string, PATH_MAX);
             fprintf(out, "%s -> %s\n", readDir->d_name, string);
         }
     }
@@ -111,7 +111,7 @@ void print_root(const char *proc_path, FILE *out)
     snprintf(pathToOpen, PATH_MAX, "%s/root", proc_path);
     fprintf(out, "\n%s:\n", pathToOpen);
     char buf[BUF_SIZE] = {'\0'};
-    /*int _read_len =*/readlink(pathToOpen, buf, BUF_SIZE);
+    readlink(pathToOpen, buf, BUF_SIZE);
     fprintf(out, "%s\n", buf);
 }
 
