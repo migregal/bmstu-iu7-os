@@ -31,9 +31,7 @@ int fortune_show(struct seq_file *m, void *v)
     int len;
 
     if (!next_index)
-    {
         return 0;
-    }
 
     len = snprintf(tmp, MAX_BUF_SIZE, "%s", &cookie_buffer[current_fortune]);
     seq_printf(m, "%s", tmp);
