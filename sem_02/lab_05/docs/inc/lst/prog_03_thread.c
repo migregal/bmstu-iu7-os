@@ -5,7 +5,7 @@
 
 void *write_buffer(void *args)
 {
-    FILE *f = fopen("out.txt", "a");
+    FILE *f = fopen("out.txt", "w");
 
     for (char c = 'b'; c <= 'z'; c += 2)
         fprintf(f, "%c", c);
@@ -16,7 +16,7 @@ void *write_buffer(void *args)
 
 int main()
 {
-    FILE *f1 = fopen("out.txt", "a");
+    FILE *f1 = fopen("out.txt", "w");
 
     pthread_t thread;
     int rc = pthread_create(&thread, NULL, write_buffer, NULL);
